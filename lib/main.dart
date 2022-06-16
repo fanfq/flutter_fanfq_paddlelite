@@ -42,6 +42,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   var _image;
 
+  var _image_original;
+
   final _picker = ImagePicker();
 
   File? _imageFile; //原图
@@ -51,14 +53,20 @@ class _MyHomePageState extends State<MyHomePage> {
   /// 从相册选择图片
   ///
   Future<void> _pickImageFromGallery() async {
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);// getImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       _imageFile = File(pickedFile.path);
       _imageUint8List =  await _imageFile!.readAsBytes();
 
+      setState(() {
+        _image_original = Image.memory(_imageUint8List!,width: 200,height: 200,);
+      });
+
       startTime = currentTimeMillis();
       print("ts-start:"+startTime.toString());
       await channel.invokeMethod(METHOD_REQUEST_RUN_MODEL, {"file": _imageUint8List} );
+
+
     }
   }
 
@@ -139,22 +147,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }));
   }
 
-  // Future<void> _callNativeMethod(String filepath) async {
-  //   try {
-  //     // 通过渠道，调用原生代码代码的方法
-  //     Uint8List bytes = await channel.invokeMethod("readimg", {"filepath": filepath} );
-  //     // 打印执行的结果
-  //
-  //     _image = Image.memory(bytes);
-  //
-  //     setState(() {
-  //     });
-  //
-  //   } on PlatformException catch(e) {
-  //     print(e.toString());
-  //   }
-  // }
-
   @override
   initState() {
     super.initState();
@@ -200,6 +192,8 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             _image == null ? Text("2") : _image,
+
+            _image_original == null ? Text("_image_original") : _image_original,
             //Image.asset("images/image.jpg"),
           ],
         ),

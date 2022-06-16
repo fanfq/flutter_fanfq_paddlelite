@@ -180,7 +180,7 @@ public class MainActivity extends FlutterActivity {
         String model_path = "image_matting/models/modnet";
         String label_path = "image_matting/labels/label_list";
         String image_path = "image_matting/images/human.jpg";
-        String bg_path = "image_matting/images/bg.jpg";
+        String bg_path = "image_matting/images/pngbg128.png";
         settingsChanged |= !model_path.equalsIgnoreCase(config.modelPath);
         settingsChanged |= !label_path.equalsIgnoreCase(config.labelPath);
         settingsChanged |= !image_path.equalsIgnoreCase(config.imagePath);
